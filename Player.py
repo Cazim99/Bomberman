@@ -19,6 +19,7 @@ class Player:
         self.name = name
         self.initalized = False
         self.other_players_data = {}
+        self.bomb_id = 0
         
         self.data = {
             'username':self.name,
@@ -34,7 +35,7 @@ class Player:
         self.rect.center = [x,y]
         
         
-        self.images = ImageLoader.load(os.getcwd()+"/Runner2D/data/Player")
+        self.images = ImageLoader.load(os.getcwd()+"/Bomberman/data/Player")
         
         self.right_walk_list_name = ("11","12","13")
         self.right_walk = []
@@ -102,16 +103,6 @@ class Player:
         except Exception as ex:
             print(ex)
             
-    def init(self):
-        self.data = {
-                'username':self.name,
-                'cordinates':(self.cam_x,self.cam_y),
-                'width':self.widht,
-                'height':self.height,
-                'roomid':self.roomid,
-                'initalized':self.initalized,
-        }
-        self.window.game.internet.send_to_server(self.data)
             
     def update(self):
         if self.window.game.playing == True:
@@ -138,47 +129,70 @@ class Player:
         self.animation_colldown += 1 
     
     def keyboard_events(self):        
-        key_pressed = pygame.key.get_pressed()
+        if self.window.game.server_map != None:
+            key_pressed = pygame.key.get_pressed()
         
-        if True not in key_pressed:
-            self.anim = [self.idle_image]
+            if True not in key_pressed:
+                self.anim = [self.idle_image]
 
-        if key_pressed[pygame.K_d]:
-            self.facing_left = False
-            self.anim = self.right_walk
-            self.window.game.move_map(-self.move_speed,0)
-            self.cam_x += self.move_speed
-            for n in self.window.game.server_map:
-                if self.collision(n):
-                    self.window.game.move_map(self.move_speed,0)
-                    self.cam_x += -self.move_speed
-                
-
-        
-        if key_pressed[pygame.K_s]:
-            self.facing_left = False
-            self.anim = self.down_walk
-            self.window.game.move_map(0,-self.move_speed)
-            self.cam_y += self.move_speed
-            for n in self.window.game.server_map:
-                if self.collision(n):
-                    self.window.game.move_map(0,self.move_speed)
-                    self.cam_y += -self.move_speed
+            if key_pressed[pygame.K_d]:
+                self.facing_left = False
+                self.anim = self.right_walk
+                self.window.game.move_map(-self.move_speed,0)
+                self.cam_x += self.move_speed
+                for n in self.window.game.server_map:
+                    if self.collision(n):
+                        self.window.game.move_map(self.move_speed,0)
+                        self.cam_x += -self.move_speed
+                    
 
             
-        if key_pressed[pygame.K_w]:
-            self.facing_left = False
-            self.anim = self.up_walk
-            self.window.game.move_map(0,self.move_speed)
-            self.cam_y += -self.move_speed
-  
-                    
-        
-        if key_pressed[pygame.K_a]:
-            self.facing_left = True
-            self.anim = self.left_walk
-            self.window.game.move_map(self.move_speed,0)
-            self.cam_x += -self.move_speed
+            if key_pressed[pygame.K_s]:
+                self.facing_left = False
+                self.anim = self.down_walk
+                self.window.game.move_map(0,-self.move_speed)
+                self.cam_y += self.move_speed
+                for n in self.window.game.server_map:
+                    if self.collision(n):
+                        self.window.game.move_map(0,self.move_speed)
+                        self.cam_y += -self.move_speed
+
+                
+            if key_pressed[pygame.K_w]:
+                self.facing_left = False
+                self.anim = self.up_walk
+                self.window.game.move_map(0,self.move_speed)
+                self.cam_y += -self.move_speed
+                for n in self.window.game.server_map:
+                    if self.collision(n):
+                        self.window.game.move_map(0,-self.move_speed)
+                        self.cam_y += self.move_speed
+
+    
+                        
+            
+            if key_pressed[pygame.K_a]:
+                self.facing_left = True
+                self.anim = self.left_walk
+                self.window.game.move_map(self.move_speed,0)
+                self.cam_x += -self.move_speed
+                for n in self.window.game.server_map:
+                    if self.collision(n):
+                        self.window.game.move_map(-self.move_speed,0)
+                        self.cam_x += self.move_speed
+                        
+            if key_pressed[pygame.K_SPACE]:
+                self.data = {
+                    'username':self.name,
+                    'cordinates':(self.cam_x,self.cam_y),
+                    'width':self.widht,
+                    'height':self.height,
+                    'roomid':self.roomid,
+                    'initalized':self.initalized,
+                    'bomb_id':self.bomb_id,
+                    'bomb':(self.cam_x,self.cam_y),
+                }
+                self.window.game.internet.send_to_server(self.data)
 
     
     def render(self):

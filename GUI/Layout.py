@@ -16,10 +16,10 @@ class AbsoluteLayout:
         
         self.rect = pygame.Rect(self.pos[0] + self.margin, self.pos[1] + self.margin, self.size[0] - self.margin*2,self.size[1] - self.margin*2)
         
-        self.sponsor = pygame.image.load(f"{os.getcwd()}/Runner2D/data/Kenny.png")
-        self.sponsor2 = pygame.image.load(f"{os.getcwd()}/Runner2D/data/zc.png")
+        self.sponsor = pygame.image.load(f"{os.getcwd()}/Bomberman/data/Kenny.png")
+        self.sponsor2 = pygame.image.load(f"{os.getcwd()}/Bomberman/data/zc.png")
         
-        self.layout_images = ImageLoader.load(os.getcwd() + "/Runner2D/data/Layout")
+        self.layout_images = ImageLoader.load(os.getcwd() + "/Bomberman/data/Layout")
         self.layout_images['grass'] = pygame.transform.scale(self.layout_images['grass'], (self.size[0]-self.margin*2, self.size[1]-self.margin*2))
         self.layout_images['stone'] = pygame.transform.scale(self.layout_images['stone'], (self.size[0]-self.margin*2, self.size[1]-self.margin*2))
         

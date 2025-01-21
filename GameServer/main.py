@@ -6,6 +6,7 @@ import queue
 from Recive import Recive
 from Broadcast import Broadcast
 import pygame
+import os
 
 import time
 
@@ -25,7 +26,7 @@ class GameServer(threading.Thread):
                 },
         }
 
-        CONFIGURATIONS = ConfigLoader.Load("config.ini", config_file_informations) # Load all configurations
+        CONFIGURATIONS = ConfigLoader.Load(f"{os.getcwd()}/Bomberman/GameServer/config.ini", config_file_informations) # Load all configurations
 
         # SERVER CONFIG
         SERVER_CONFIGS = CONFIGURATIONS['settings']['items']
@@ -41,14 +42,14 @@ class GameServer(threading.Thread):
         self.rooms = {}
         self.Queue = queue.Queue()
         self.map = ['#','#','#','#','#','#','#','#','#','#'
-                    ,'#','1','1','0','0','0','0','#','#','#'
-                    ,'#','1','0','0','0','0','0','0','#','#'
+                    ,'#','1','1','0','0','0','0','1','1','#'
+                    ,'#','1','0','0','0','0','0','0','1','#'
                     ,'#','0','0','#','0','0','#','0','0','#'
                     ,'#','0','0','0','0','0','0','0','0','#'
                     ,'#','0','0','0','0','0','0','0','0','#'
                     ,'#','0','0','#','0','0','#','0','0','#'
-                    ,'#','#','0','0','0','0','0','0','1','#'
-                    ,'#','#','#','0','0','0','0','1','1','#'
+                    ,'#','1','0','0','0','0','0','0','1','#'
+                    ,'#','1','1','0','0','0','0','1','1','#'
                     ,'#','#','#','#','#','#','#','#','#','#']
         
         

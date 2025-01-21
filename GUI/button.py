@@ -15,7 +15,7 @@ class Button:
         self.useAsX = useAsX
 
         self.click_channel = pygame.mixer.Channel(6)
-        self.click_sound = mixer.Sound(f"{os.getcwd()}/Runner2D/data/sounds/click-b.ogg")
+        self.click_sound = mixer.Sound(f"{os.getcwd()}/Bomberman/data/sounds/click-b.ogg")
         
         self.color = color
         self.text = window.FONT_ARIAL.render(f"{text}", True, text_color)
@@ -23,7 +23,7 @@ class Button:
         self.disabled = False
         self.pressedElement = False
 
-        self.images = ImageLoader.load(f"{os.getcwd()}/Runner2D/data/gui_images/button")
+        self.images = ImageLoader.load(f"{os.getcwd()}/Bomberman/data/gui_images/button")
         self.images[self.color + '_btn'] = pygame.transform.scale(self.images[self.color + '_btn'],((window.FONT.get_height()*2)+(self.text.get_width()*3), window.FONT.get_height()*4))
         self.images[self.color + '_btn_pressed'] = pygame.transform.scale(self.images[self.color + '_btn_pressed'],((window.FONT.get_height()*2)+(self.text.get_width()*3), window.FONT.get_height()*4))
         self.images[self.color + '_btn_hover'] = pygame.transform.scale(self.images[self.color + '_btn_hover'],((window.FONT.get_height()*2)+(self.text.get_width()*3), window.FONT.get_height()*4))

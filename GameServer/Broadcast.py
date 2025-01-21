@@ -1,6 +1,7 @@
 import threading
 import json
 import pickle
+import uuid
 
 class Broadcast(threading.Thread):
     
@@ -39,4 +40,5 @@ class Broadcast(threading.Thread):
                                 self.root.send_to_client({'users':self.root.rooms[user['roomid']]}, self.root.rooms[user['roomid']]['clients'][client])
 
                 except Exception as ex:
+                    print(ex)
                     self.root.output.append(ex)

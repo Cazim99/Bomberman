@@ -24,38 +24,46 @@ class Client(threading.Thread):
         while self.running:
             try:
                 data_from_server = self.recive_from_server()['data']['users']
+                self.game.bombs = self.recive_from_server()['data']['users']['bombs']
                 self.game.player.other_players_data = data_from_server
                 self.game.player.roomid = data_from_server['users'][self.game.player.name]['roomid']
                 if 'users' in data_from_server:
                     myself = data_from_server['users'][self.game.player.data['username']]
                     
-                    # --------- LOADING MAP ------------ 
-                    map = []
-                    map_desing = data_from_server['map']
-                    x = self.game.map_position_x
-                    y = self.game.map_position_y
-                    c = 0
-                    for block in map_desing:
-                        if block != '1':
-                            map.append(pygame.Rect(x,y,150,150))
-                        x += 150
-                        c += 1
-                        if c >= 10:
-                            x = self.game.map_position_x
-                            y += 150
-                            c = 0
-                        
-                    self.game.server_map = map
-                    # --------- LOADING MAP ------------ 
                     
                     if 'new_cordinates' in myself:
+                        
+                        # --------- LOADING MAP ------------ 
+                        map = []
+                        map_desing = data_from_server['map']
+                        self.game.server_map_desing = map_desing
+                        x = self.game.map_position_x
+                        y = self.game.map_position_y
+                        c = 0
+                        for block in map_desing:
+                            if block != '1':
+                                map.append(pygame.Rect(x,y,150,150))
+                            else:
+                                map.append(pygame.Rect(x-50000,y,150,150))
+                            x += 150
+                            c += 1
+                            if c >= 10:
+                                x = self.game.map_position_x
+                                y += 150
+                                c = 0
+                            
+                        self.game.server_map = map
+                        # --------- LOADING MAP ------------ 
+                        
                         self.game.move_map(-myself['new_cordinates'][0], -myself['new_cordinates'][1])
                         self.game.player.cam_x = myself['new_cordinates'][0]
                         self.game.player.cam_y = myself['new_cordinates'][1]
                         self.game.player.initalized = True
+                        
                     self.freez_game = False
                 
             except (Exception,TimeoutError) as ex:
+                print(ex)
                 self.freez_game = True
                 self.send_to_server(self.game.player.data)
                 time.sleep(1)

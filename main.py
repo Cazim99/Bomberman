@@ -1,5 +1,6 @@
 from Window import Window
 from ConfigLoader import ConfigLoader
+import os
 
 config_file_informations = {
     "settings":
@@ -14,7 +15,7 @@ config_file_informations = {
             }
         },
 }
-CONFIGURATIONS = ConfigLoader.Load("config.ini", config_file_informations) # Load all configurations
+CONFIGURATIONS = ConfigLoader.Load(f"{os.getcwd()}/Bomberman/config.ini", config_file_informations) # Load all configurations
 GAME_CONFIGURATIONS = CONFIGURATIONS['settings']['items'] # Load settings section from configuratios for game
 
 GMSERVER = (GAME_CONFIGURATIONS['game_server_host'], # HOST

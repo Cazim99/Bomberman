@@ -37,7 +37,9 @@ class Recive(threading.Thread):
                 
                 if user['username'] in self.users:
                     user['roomid'] = self.users[user['username']]['roomid']
-                    if user['initalized'] == True:
+                    if user['initalized'] == True:                            
+                        if 'bomb' in user:
+                            self.root.rooms[user['roomid']]['bombs'][str(uuid.uuid4())] = (user['bomb'],user['username'])
                         self.queue.put((user, address))
                     else:
                         self.root.rooms[user['roomid']]['users'][user['username']]['new_cordinates'] = self.users[user['username']]['cordinates']
@@ -54,13 +56,13 @@ class Recive(threading.Thread):
                     self.users[new_user['username']] = new_user
                     if len(self.root.rooms) == 0:
                         new_user['roomid'] = str(uuid.uuid4())
-                        new_user['new_cordinates'] = (-530,-530)
-                        self.root.rooms[new_user['roomid']] = {'users':{new_user['username']:new_user},'clients':{new_user['username']:address},'map':self.root.map} 
+                        new_user['new_cordinates'] = (-550,-530)
+                        self.root.rooms[new_user['roomid']] = {'users':{new_user['username']:new_user},'clients':{new_user['username']:address},'map':self.root.map, 'bombs':{}} 
                     else:
                         for room in self.root.rooms:
                             if len(self.root.rooms[room]['users']) < 2:
                                 new_user['roomid'] = room
-                                new_user['new_cordinates'] = (530,530)
+                                new_user['new_cordinates'] = (550,530)
                                 self.root.rooms[room]['users'][new_user['username']] = new_user
                                 self.root.rooms[room]['clients'][new_user['username']] = address
                                 if len(self.root.rooms[room]['users']) == 2: # ako se popuni soba napravi novu

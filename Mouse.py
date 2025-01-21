@@ -10,7 +10,7 @@ class Mouse:
         self.pos = [x,y] # pozicija misa
         pygame.mouse.set_visible(False) # sakri default mis
         
-        self.mouse_images = ImageLoader.load(os.getcwd() + "/Runner2D/data/cursor") # ucitavanje slika misa
+        self.mouse_images = ImageLoader.load(os.getcwd() + "/Bomberman/data/cursor") # ucitavanje slika misa
         self.current_mouse_image = self.mouse_images['cursor'] # postavljanje prvobitne slike kada je mis u staticnom stanju
         
         self.rect = self.current_mouse_image.get_rect() 
