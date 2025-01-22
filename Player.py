@@ -20,6 +20,7 @@ class Player:
         self.initalized = False
         self.other_players_data = {}
         self.bomb_id = 0
+        self.bomb_strength = 1
         
         self.data = {
             'username':self.name,
@@ -72,6 +73,11 @@ class Player:
         self.anim_speed = 5
         self.animation_colldown = 0 
         self.move_speed = 10
+        
+
+        # KEYBOARD
+        self.kbColldown = 10
+        self.keyboard_colldown = self.kbColldown
      
     """def collision(self, rect):
         if self.rect.colliderect(rect):
@@ -140,8 +146,10 @@ class Player:
                 self.anim = self.right_walk
                 self.window.game.move_map(-self.move_speed,0)
                 self.cam_x += self.move_speed
-                for n in self.window.game.server_map:
-                    if self.collision(n):
+                for index, block in enumerate(self.window.game.server_map):
+                    if self.window.game.server_map_desing[index] == '1':
+                        continue
+                    if self.collision(block):
                         self.window.game.move_map(self.move_speed,0)
                         self.cam_x += -self.move_speed
                     
@@ -152,8 +160,10 @@ class Player:
                 self.anim = self.down_walk
                 self.window.game.move_map(0,-self.move_speed)
                 self.cam_y += self.move_speed
-                for n in self.window.game.server_map:
-                    if self.collision(n):
+                for index, block in enumerate(self.window.game.server_map):
+                    if self.window.game.server_map_desing[index] == '1':
+                        continue
+                    if self.collision(block):
                         self.window.game.move_map(0,self.move_speed)
                         self.cam_y += -self.move_speed
 
@@ -163,8 +173,10 @@ class Player:
                 self.anim = self.up_walk
                 self.window.game.move_map(0,self.move_speed)
                 self.cam_y += -self.move_speed
-                for n in self.window.game.server_map:
-                    if self.collision(n):
+                for index, block in enumerate(self.window.game.server_map):
+                    if self.window.game.server_map_desing[index] == '1':
+                        continue
+                    if self.collision(block):
                         self.window.game.move_map(0,-self.move_speed)
                         self.cam_y += self.move_speed
 
@@ -176,23 +188,31 @@ class Player:
                 self.anim = self.left_walk
                 self.window.game.move_map(self.move_speed,0)
                 self.cam_x += -self.move_speed
-                for n in self.window.game.server_map:
-                    if self.collision(n):
+                for index, block in enumerate(self.window.game.server_map):
+                    if self.window.game.server_map_desing[index] == '1':
+                        continue
+                    if self.collision(block):
                         self.window.game.move_map(-self.move_speed,0)
                         self.cam_x += self.move_speed
                         
             if key_pressed[pygame.K_SPACE]:
-                self.data = {
-                    'username':self.name,
-                    'cordinates':(self.cam_x,self.cam_y),
-                    'width':self.widht,
-                    'height':self.height,
-                    'roomid':self.roomid,
-                    'initalized':self.initalized,
-                    'bomb_id':self.bomb_id,
-                    'bomb':(self.cam_x,self.cam_y),
-                }
-                self.window.game.internet.send_to_server(self.data)
+                if self.keyboard_colldown >= self.kbColldown:
+                    self.keyboard_colldown = 0
+                    self.data = {
+                        'username':self.name,
+                        'cordinates':(self.cam_x,self.cam_y),
+                        'width':self.widht,
+                        'height':self.height,
+                        'roomid':self.roomid,
+                        'initalized':self.initalized,
+                        'bomb_id':self.bomb_id,
+                        'bomb':(self.cam_x,self.cam_y),
+                    }
+                    self.window.game.internet.send_to_server(self.data)
+
+                            
+
+            self.keyboard_colldown += 1
 
     
     def render(self):
@@ -200,5 +220,4 @@ class Player:
             self.render_other_players()
             if self.window.game.playing == True:
                 self.window.screen.blit(self.current_image, self.rect)
-                pygame.draw.rect(self.window.screen, "red", self.rect, 1)
         

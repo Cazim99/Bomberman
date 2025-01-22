@@ -1,6 +1,7 @@
 import pickle
 import threading
 import uuid
+import time
 
 class Recive(threading.Thread):
     
@@ -12,7 +13,28 @@ class Recive(threading.Thread):
         self.queue = root.Queue
         self.clients = root.clients
         self.users = root.users
-        
+
+
+    def background_task(self, roomid, id):
+        print("Bomb activated")
+        time.sleep(0.1)
+        c = 0
+        for n in range(0,10):
+            self.root.rooms[roomid]['bombs'][id][2] = c
+            if c == 1:
+                c = 0
+            else:
+                c = 1
+            time.sleep(0.3)
+
+        self.root.rooms[roomid]['bombs'][id][2] = 1
+        print("Bomb exploded")
+        time.sleep(0.5)
+        self.root.rooms[roomid]['bombs'].pop(id)
+
+    def activate_bomb(self, roomid, id):
+        thread = threading.Thread(target=self.background_task,args=(roomid,id),daemon=True)
+        thread.start()    
         
     def run(self):
         while True:
@@ -39,7 +61,10 @@ class Recive(threading.Thread):
                     user['roomid'] = self.users[user['username']]['roomid']
                     if user['initalized'] == True:                            
                         if 'bomb' in user:
-                            self.root.rooms[user['roomid']]['bombs'][str(uuid.uuid4())] = (user['bomb'],user['username'])
+                            id = str(uuid.uuid4())
+                            self.root.rooms[user['roomid']]['bombs'][id] = [user['bomb'],user['username'], 0]
+                            self.activate_bomb(user['roomid'],id)
+                            
                         self.queue.put((user, address))
                     else:
                         self.root.rooms[user['roomid']]['users'][user['username']]['new_cordinates'] = self.users[user['username']]['cordinates']

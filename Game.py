@@ -20,14 +20,17 @@ class Game:
         self.map_position_y = ((self.window.screen_size[1] / 2) - (self.map_height / 2)) 
         
         self.images = ImageLoader.load(os.getcwd()+ "/Bomberman/data/game/map")
+
         for img in self.images:
             self.images[img] = pygame.transform.scale(self.images[img],(150,150))
+
+        self.bomb_images = (pygame.transform.scale(self.images['bomb'],(50,50)),pygame.transform.scale(self.images['bomb2'],(50,50)))
             
         self.server_map = None
         self.server_map_desing = None
         self.bombs = {}
                 
-        self.player = Player(self.window, self.window.screen_size[0]/2, self.window.screen_size[1]/2, 0, 0 , 100, 130, "Cazim")
+        self.player = Player(self.window, self.window.screen_size[0]/2, self.window.screen_size[1]/2, 0, 0 , 100, 130, "Cazim2")
         
      
     def move_map(self, x, y):
@@ -74,8 +77,10 @@ class Game:
             
             
             # -------------- BOMBS -----------------
+            
             for bomb in self.bombs:
-                pygame.draw.rect(self.window.screen,"red", (self.bombs[bomb][0][0],self.bombs[bomb][0][1],50,50),1)
+                bomb_cords = self.player.calculate_cords_by_my_position((self.bombs[bomb][0]))
+                self.window.screen.blit(self.bomb_images[self.bombs[bomb][2]], (bomb_cords[0]-25,bomb_cords[1],50,50))
             # -------------- BOMBS -----------------
             
             

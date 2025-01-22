@@ -24,7 +24,7 @@ class Client(threading.Thread):
         while self.running:
             try:
                 data_from_server = self.recive_from_server()['data']['users']
-                self.game.bombs = self.recive_from_server()['data']['users']['bombs']
+                self.game.bombs = data_from_server['bombs']
                 self.game.player.other_players_data = data_from_server
                 self.game.player.roomid = data_from_server['users'][self.game.player.name]['roomid']
                 if 'users' in data_from_server:
@@ -41,10 +41,7 @@ class Client(threading.Thread):
                         y = self.game.map_position_y
                         c = 0
                         for block in map_desing:
-                            if block != '1':
-                                map.append(pygame.Rect(x,y,150,150))
-                            else:
-                                map.append(pygame.Rect(x-50000,y,150,150))
+                            map.append(pygame.Rect(x,y,150,150))
                             x += 150
                             c += 1
                             if c >= 10:
